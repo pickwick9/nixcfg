@@ -1,8 +1,11 @@
-set -o vi
+export CLICOLOR=1
+export MANPAGER='nvim +Man!'
+export PS1=$'%n@%m:%{\e[01;32m%}%~%{\e[0m%}$ '
+
+alias code='codium'
 alias vi='nvim'
 
-export CLICOLOR=1
-export PS1=$'%n@%m:%{\e[01;32m%}%~%{\e[0m%}$ '
+set -o vi
 
 fcd() {
   local dir
@@ -11,5 +14,3 @@ fcd() {
 }
 zle -N fcd
 bindkey '^T' fcd
-
-export MANPAGER='nvim +Man!'
