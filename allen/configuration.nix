@@ -19,11 +19,8 @@
     git
     gnupg
     htop
-    keepassxc
-    neofetch
     neovim
     pinentry
-    python3
     tmux
     wget
     wl-clipboard
@@ -36,17 +33,6 @@
       isNormalUser = true;
       description = "allen";
       extraGroups = [ "networkmanager" "wheel" ];
-      packages = with pkgs; [
-        android-studio
-        android-tools
-        ollama
-        rtorrent
-        signal-desktop
-        spotdl
-        vlc
-        vscodium
-        yt-dlp
-      ];
     };
   };
 

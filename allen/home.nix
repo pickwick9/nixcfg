@@ -4,6 +4,19 @@
   home.username = "allen";
   home.homeDirectory = "/home/allen";
 
+  home.packages = with pkgs; [
+    keepassxc
+    neofetch
+    ollama
+    python3
+    rtorrent
+    signal-desktop
+    spotdl
+    vlc
+    vscodium
+    yt-dlp
+  ];
+
   # git
   home.file.".gitconfig".source = ./apps/git/.gitconfig;
 
