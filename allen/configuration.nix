@@ -15,6 +15,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    direnv
     fzf
     git
     gnupg

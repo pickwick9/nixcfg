@@ -14,3 +14,6 @@ fcd() {
 }
 zle -N fcd
 bindkey '^T' fcd
+
+eval "$(direnv hook zsh)"
+
