@@ -3,16 +3,6 @@
 {
   imports = [ ./hardware-configuration.nix ];
 
-  nixpkgs.config.allowUnfree = true;
-
-  nix = {
-    settings.experimental-features = [ "nix-command" "flakes" ]; 
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
-    };
-  };
 
   environment.systemPackages = with pkgs; [
     direnv
@@ -20,6 +10,7 @@
     git
     gnupg
     htop
+    lsof
     neovim
     pinentry
     tmux
@@ -27,6 +18,7 @@
     wl-clipboard
     zsh
   ];
+
 
   users = {
     defaultUserShell = pkgs.zsh;
@@ -37,6 +29,7 @@
     };
   };
 
+
   programs = {
     firefox.enable = true;
     zsh = {
@@ -44,6 +37,7 @@
       ohMyZsh.enable = true;
     };
   };
+
 
   services = {
     printing.enable = true; # enable CUPS to print documents.
@@ -63,24 +57,40 @@
     };
   };
 
-  # bootloader.
+
+  nixpkgs.config.allowUnfree = true;
+
+
+  nix = {
+    settings.experimental-features = [ "nix-command" "flakes" ]; 
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+  };
+
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+
+  sound.enable = true;
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+
+
   networking.hostName = "nixos";
-  # networking.wireless.enable = true;  # enables wireless support via wpa_supplicant.
-
-  # configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # enable networking
   networking.networkmanager.enable = true;
 
-  # time zone.
-  time.timeZone = "America/New_York";
 
-  # select internationalisation properties.
+  time.timeZone = "America/New_York";
   i18n = {
     defaultLocale = "en_US.UTF-8";
     extraLocaleSettings = {
@@ -96,16 +106,6 @@
     };
   };
 
-  # enable sound with pipewire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
