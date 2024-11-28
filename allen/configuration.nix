@@ -91,12 +91,12 @@
       enable = true;
       # allow incoming TCP connections on port 8081 from 192.168.1.159/24 (for expo)
       extraCommands = ''
-        iptables -C nixos-fw -p tcp --dport 8081 -s 192.168.1.159/24 -j ACCEPT || \
-        iptables -I nixos-fw -p tcp --dport 8081 -s 192.168.1.159/24 -j ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 8081 --source 192.168.1.159/24 --jump ACCEPT || \
+        iptables --insert nixos-fw --protocol tcp --dport 8081 --source 192.168.1.159/24 --jump ACCEPT;
       '';
       extraStopCommands = ''
-        iptables -C nixos-fw -p tcp --dport 8081 -s 192.168.1.159/24 -j ACCEPT && \
-        iptables -D nixos-fw -p tcp --dport 8081 -s 192.168.1.159/24 -j ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 8081 --source 192.168.1.159/24 --jump ACCEPT && \
+        iptables --delete nixos-fw --protocol tcp --dport 8081 --source 192.168.1.159/24 --jump ACCEPT;
       '';
     };
     hostName = "nixos";
