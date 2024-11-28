@@ -1,0 +1,24 @@
+{
+  // telemetry & data sharing
+  "telemetry.enableCrashReporter": false,
+  "telemetry.enableTelemetry": false,
+  "telemetry.telemetryLevel": "off",
+  "extensions.ignoreRecommendations": true,
+  "workbench.settings.enableNaturalLanguageSearch": false,
+  // vim
+  "editor.cursorBlinking": "solid",
+  "editor.cursorStyle": "line",
+  "editor.detectIndentation": false,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "vim.useSystemClipboard": true,
+  // format on save
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // other
+  "editor.minimap.enabled": false,
+  "editor.wordWrap": "on",
+  "terminal.integrated.sendKeybindingsToShell": true,
+  "workbench.startupEditor": "none",
+  "workbench.age.walkthroughs.openOnInstall": false,
+}

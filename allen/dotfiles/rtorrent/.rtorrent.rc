@@ -1,0 +1,13 @@
+network.port_range.set = 49160-65534
+network.port_random.set = yes
+
+throttle.global_down.max_rate.set_kb = 0
+throttle.global_up.max_rate.set_kb = 0
+
+throttle.min_peers.normal.set = 200
+throttle.max_peers.normal.set = 100
+throttle.max_uploads.set = 100
+
+protocol.encryption.set = allow_incoming,enable_retry,prefer_plaintext
+
+check_hash = yes
