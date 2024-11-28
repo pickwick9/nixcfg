@@ -16,6 +16,7 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   // personal preferences
+  "editor.lineNumbers": "relative",
   "editor.minimap.enabled": false,
   "editor.wordWrap": "on",
   "terminal.integrated.sendKeybindingsToShell": true,
