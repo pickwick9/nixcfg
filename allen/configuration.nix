@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-2405, ... }:
 
 {
   imports = [ ./hardware-configuration.nix ];
@@ -14,8 +14,7 @@
     };
   };
 
-
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = (with pkgs; [
     direnv
     docker
     fzf
@@ -30,21 +29,38 @@
     wget
     wl-clipboard
     zsh
-  ];
+  ]) ++ (with pkgs-2405; [
+    # ...
+  ]);
 
-
-  users = {
-    defaultUserShell = pkgs.zsh;
-    users.allen = {
-      isNormalUser = true;
-      description = "allen";
-      extraGroups = [ "docker" "networkmanager" "wheel" ];
-    };
+  users.users.allen = {
+    isNormalUser = true;
+    description = "allen";
+    extraGroups = [ "docker" "networkmanager" "wheel" ];
+    packages = (with pkgs; [
+      keepassxc
+      neofetch
+      netcat
+      nmap
+      ollama
+      python3
+      qbittorrent
+      signal-desktop
+      spotdl
+      tshark
+      ungoogled-chromium
+      vlc
+      vscodium
+      xournalpp
+      yt-dlp
+    ]) ++ (with pkgs-2405; [
+      # ...
+    ]);
   };
 
+  users.defaultUserShell = pkgs.zsh;
 
   virtualisation.docker.enable = true;
-
 
   programs = {
     firefox.enable = true;
@@ -53,7 +69,6 @@
       ohMyZsh.enable = true;
     };
   };
-
 
   services = {
     printing.enable = true; # enable CUPS to print documents.
@@ -73,30 +88,38 @@
     };
   };
 
-
   networking = {
     firewall = {
       enable = true;
-      # allow incoming TCP connections on port 8081 from 192.168.1.159/24 (expo)
+      # allow incoming TCP connections for certain services (expo, supabase)
       extraCommands = ''
-        iptables -C nixos-fw -p tcp --dport 8081 -s 192.168.1.159/24 -j ACCEPT || \
-        iptables -I nixos-fw -p tcp --dport 8081 -s 192.168.1.159/24 -j ACCEPT;
+        # expo
+        iptables --check nixos-fw --protocol tcp --dport 8081 --source 192.168.1.159/24 --jump ACCEPT || iptables --insert nixos-fw --protocol tcp --dport 8081 --source 192.168.1.159/24 --jump ACCEPT;
+        # supabase
+        iptables --check nixos-fw --protocol tcp --dport 54321 --jump ACCEPT || iptables --insert nixos-fw --protocol tcp --dport 54321 --jump ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 54322 --jump ACCEPT || iptables --insert nixos-fw --protocol tcp --dport 54322 --jump ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 54323 --jump ACCEPT || iptables --insert nixos-fw --protocol tcp --dport 54323 --jump ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 54324 --jump ACCEPT || iptables --insert nixos-fw --protocol tcp --dport 54324 --jump ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 54327 --jump ACCEPT || iptables --insert nixos-fw --protocol tcp --dport 54327 --jump ACCEPT;
       '';
       extraStopCommands = ''
-        iptables -C nixos-fw -p tcp --dport 8081 -s 192.168.1.159/24 -j ACCEPT && \
-        iptables -D nixos-fw -p tcp --dport 8081 -s 192.168.1.159/24 -j ACCEPT;
+        # expo
+        iptables --check nixos-fw --protocol tcp --dport 8081 --source 192.168.1.159/24 --jump ACCEPT && iptables --delete nixos-fw --protocol tcp --dport 8081 --source 192.168.1.159/24 --jump ACCEPT;
+        # supabase
+        iptables --check nixos-fw --protocol tcp --dport 54321 --jump ACCEPT && iptables --delete nixos-fw --protocol tcp --dport 54321 --jump ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 54322 --jump ACCEPT && iptables --delete nixos-fw --protocol tcp --dport 54322 --jump ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 54323 --jump ACCEPT && iptables --delete nixos-fw --protocol tcp --dport 54323 --jump ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 54324 --jump ACCEPT && iptables --delete nixos-fw --protocol tcp --dport 54324 --jump ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 54327 --jump ACCEPT && iptables --delete nixos-fw --protocol tcp --dport 54327 --jump ACCEPT;
       '';
     };
     hostName = "nixos";
     networkmanager.enable = true;
   };
 
-
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -105,7 +128,6 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-
 
   time.timeZone = "America/New_York";
   i18n = {
@@ -122,7 +144,6 @@
       LC_TIME = "en_US.UTF-8";
     };
   };
-
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

@@ -1,36 +1,19 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 
 {
   home.username = "allen";
   home.homeDirectory = "/home/allen";
 
-  # dotfiles
   home.file = {
     ".config/nvim/init.lua".source = ./dotfiles/nvim/init.lua;
     ".config/VSCodium/User/keybindings.json".source = ./dotfiles/vscodium/keybindings.json;
     ".config/VSCodium/User/settings.json".source = ./dotfiles/vscodium/settings.json;
     ".gitconfig".source = ./dotfiles/git/.gitconfig;
     ".gnupg/gpg-agent.conf".source = ./dotfiles/gpg/gpg-agent.conf;
-    ".rtorrent.rc".source = ./dotfiles/rtorrent/.rtorrent.rc;
     ".tmux.conf".source = ./dotfiles/tmux/.tmux.conf;
     ".zsh_profile".source = ./dotfiles/zsh/.zsh_profile;
     ".zshrc".source = ./dotfiles/zsh/.zshrc;
   };
-
-  # packages
-  home.packages = with pkgs; [
-    keepassxc
-    neofetch
-    netcat
-    ollama
-    python3
-    rtorrent
-    signal-desktop
-    spotdl
-    vlc
-    vscodium
-    yt-dlp
-  ];
 
   # let home manager install and manage itself.
   programs.home-manager.enable = true;
