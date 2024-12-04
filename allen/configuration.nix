@@ -38,6 +38,7 @@
     description = "allen";
     extraGroups = [ "docker" "networkmanager" "wheel" ];
     packages = (with pkgs; [
+      gimp
       keepassxc
       neofetch
       netcat
@@ -58,17 +59,23 @@
     ]);
   };
 
-  users.defaultUserShell = pkgs.zsh;
-
-  virtualisation.docker.enable = true;
-
   programs = {
+    steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+      localNetworkGameTransfers.openFirewall = true;
+    };
     firefox.enable = true;
     zsh = {
       enable = true;
       ohMyZsh.enable = true;
     };
   };
+
+  users.defaultUserShell = pkgs.zsh;
+
+  virtualisation.docker.enable = true;
 
   services = {
     printing.enable = true; # enable CUPS to print documents.
