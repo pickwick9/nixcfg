@@ -38,12 +38,20 @@
     description = "allen";
     extraGroups = [ "docker" "networkmanager" "wheel" ];
     packages = (with pkgs; [
+      android-studio
+      awscli
+      dig
       gimp
+      kdePackages.kdenlive
       keepassxc
+      kicad
+      magic-vlsi
       neofetch
       netcat
+      ngspice
       nmap
       ollama
+      popsicle
       python3
       qbittorrent
       signal-desktop
@@ -53,6 +61,7 @@
       vlc
       vscodium
       xournalpp
+      xschem
       yt-dlp
     ]) ++ (with pkgs-2405; [
       # ...
