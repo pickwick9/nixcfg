@@ -40,7 +40,7 @@
     packages = (with pkgs; [
       android-studio
       awscli
-      dig
+      dnsutils
       gimp
       kdePackages.kdenlive
       keepassxc
@@ -50,12 +50,13 @@
       netcat
       ngspice
       nmap
-      ollama
       popsicle
       python3
       qbittorrent
       signal-desktop
       spotdl
+      tealdeer
+      texliveFull
       tshark
       ungoogled-chromium
       vlc
@@ -69,12 +70,6 @@
   };
 
   programs = {
-    steam = {
-      enable = true;
-      remotePlay.openFirewall = true;
-      dedicatedServer.openFirewall = true;
-      localNetworkGameTransfers.openFirewall = true;
-    };
     firefox.enable = true;
     zsh = {
       enable = true;
@@ -88,13 +83,6 @@
 
   services = {
     printing.enable = true; # enable CUPS to print documents.
-    ollama = {
-      acceleration = "rocm";
-      enable = true;
-      environmentVariables = {
-        HSA_OVERRIDE_GFX_VERSION = "11.0.0";
-      };
-    };
     xserver = {
       desktopManager.plasma6.enable = true;
       displayManager.sddm.enable = true;
