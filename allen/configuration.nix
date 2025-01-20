@@ -96,31 +96,35 @@
   networking = {
     firewall = {
       enable = true;
-      # allow inbound TCP connections from ALLOWED_IP on expo and supabase ports
+      # allow inbound TCP connections from a set of manually specified IPs on expo and supabase ports
       extraCommands = ''
-        ALLOWED_IP=192.168.1.161
+        # allowed IPs
+        PHONE=192.168.1.161
+        DOCKER=172.18.0.0/16
 
         # expo
-        iptables --check nixos-fw --protocol tcp --dport 8081 --source $ALLOWED_IP --jump ACCEPT || \
-        iptables --insert nixos-fw --protocol tcp --dport 8081 --source $ALLOWED_IP --jump ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 8081 --source $PHONE --jump ACCEPT || \
+        iptables --insert nixos-fw --protocol tcp --dport 8081 --source $PHONE --jump ACCEPT;
 
         # supabase
         for port in 54321 54322 54323 54324 54327; do
-          iptables --check nixos-fw --protocol tcp --dport $port --source $ALLOWED_IP --jump ACCEPT || \
-          iptables --insert nixos-fw --protocol tcp --dport $port --source $ALLOWED_IP --jump ACCEPT;
+          iptables --check nixos-fw --proto tcp --dport $port --source $DOCKER --jump ACCEPT || \
+          iptables --insert nixos-fw --proto tcp --dport $port --source $DOCKER --jump ACCEPT;
         done
       '';
       extraStopCommands = ''
-        ALLOWED_IP=192.168.1.161
+        # allowed IPs
+        PHONE=192.168.1.161
+        DOCKER=172.18.0.0/16
 
         # expo
-        iptables --check nixos-fw --protocol tcp --dport 8081 --source $ALLOWED_IP --jump ACCEPT && \
-        iptables --delete nixos-fw --protocol tcp --dport 8081 --source $ALLOWED_IP --jump ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 8081 --source $PHONE --jump ACCEPT && \
+        iptables --delete nixos-fw --protocol tcp --dport 8081 --source $PHONE --jump ACCEPT;
 
         # supabase
         for port in 54321 54322 54323 54324 54327; do
-          iptables --check nixos-fw --protocol tcp --dport $port --source $ALLOWED_IP --jump ACCEPT && \
-          iptables --delete nixos-fw --protocol tcp --dport $port --source $ALLOWED_IP --jump ACCEPT;
+          iptables --check nixos-fw --protocol tcp --dport $port --source $DOCKER --jump ACCEPT && \
+          iptables --delete nixos-fw --protocol tcp --dport $port --source $DOCKER --jump ACCEPT;
         done
       '';
     };
