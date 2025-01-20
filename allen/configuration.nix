@@ -16,7 +16,6 @@
 
   environment.systemPackages = (with pkgs; [
     direnv
-    docker
     fzf
     git
     gnupg
@@ -39,17 +38,20 @@
     extraGroups = [ "docker" "networkmanager" "wheel" ];
     packages = (with pkgs; [
       android-studio
-      awscli
+      celluloid
       dnsutils
+      docker
+      elan
+      geogebra
       gimp
       kdePackages.kdenlive
       keepassxc
-      kicad
-      magic-vlsi
+      lean4
       neofetch
       netcat
       ngspice
       nmap
+      obs-studio
       popsicle
       python3
       qbittorrent
@@ -59,11 +61,10 @@
       texliveFull
       tshark
       ungoogled-chromium
-      vlc
       vscodium
       xournalpp
-      xschem
       yt-dlp
+      zulip
     ]) ++ (with pkgs-2405; [
       # ...
     ]);
@@ -95,26 +96,32 @@
   networking = {
     firewall = {
       enable = true;
-      # allow incoming TCP connections for certain services (expo, supabase)
+      # allow inbound TCP connections from ALLOWED_IP on expo and supabase ports
       extraCommands = ''
+        ALLOWED_IP=192.168.1.161/24
+
         # expo
-        iptables --check nixos-fw --protocol tcp --dport 8081 --source 192.168.1.159/24 --jump ACCEPT || iptables --insert nixos-fw --protocol tcp --dport 8081 --source 192.168.1.159/24 --jump ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 8081 --source $ALLOWED_IP --jump ACCEPT || \
+        iptables --insert nixos-fw --protocol tcp --dport 8081 --source $ALLOWED_IP --jump ACCEPT;
+
         # supabase
-        iptables --check nixos-fw --protocol tcp --dport 54321 --jump ACCEPT || iptables --insert nixos-fw --protocol tcp --dport 54321 --jump ACCEPT;
-        iptables --check nixos-fw --protocol tcp --dport 54322 --jump ACCEPT || iptables --insert nixos-fw --protocol tcp --dport 54322 --jump ACCEPT;
-        iptables --check nixos-fw --protocol tcp --dport 54323 --jump ACCEPT || iptables --insert nixos-fw --protocol tcp --dport 54323 --jump ACCEPT;
-        iptables --check nixos-fw --protocol tcp --dport 54324 --jump ACCEPT || iptables --insert nixos-fw --protocol tcp --dport 54324 --jump ACCEPT;
-        iptables --check nixos-fw --protocol tcp --dport 54327 --jump ACCEPT || iptables --insert nixos-fw --protocol tcp --dport 54327 --jump ACCEPT;
+        for port in 54321 54322 54323 54324 54327; do
+          iptables --check nixos-fw --protocol tcp --dport $port --source $ALLOWED_IP --jump ACCEPT || \
+          iptables --insert nixos-fw --protocol tcp --dport $port --source $ALLOWED_IP --jump ACCEPT;
+        done
       '';
       extraStopCommands = ''
+        ALLOWED_IP=192.168.1.161/24
+
         # expo
-        iptables --check nixos-fw --protocol tcp --dport 8081 --source 192.168.1.159/24 --jump ACCEPT && iptables --delete nixos-fw --protocol tcp --dport 8081 --source 192.168.1.159/24 --jump ACCEPT;
+        iptables --check nixos-fw --protocol tcp --dport 8081 --source $ALLOWED_IP --jump ACCEPT && \
+        iptables --delete nixos-fw --protocol tcp --dport 8081 --source $ALLOWED_IP --jump ACCEPT;
+
         # supabase
-        iptables --check nixos-fw --protocol tcp --dport 54321 --jump ACCEPT && iptables --delete nixos-fw --protocol tcp --dport 54321 --jump ACCEPT;
-        iptables --check nixos-fw --protocol tcp --dport 54322 --jump ACCEPT && iptables --delete nixos-fw --protocol tcp --dport 54322 --jump ACCEPT;
-        iptables --check nixos-fw --protocol tcp --dport 54323 --jump ACCEPT && iptables --delete nixos-fw --protocol tcp --dport 54323 --jump ACCEPT;
-        iptables --check nixos-fw --protocol tcp --dport 54324 --jump ACCEPT && iptables --delete nixos-fw --protocol tcp --dport 54324 --jump ACCEPT;
-        iptables --check nixos-fw --protocol tcp --dport 54327 --jump ACCEPT && iptables --delete nixos-fw --protocol tcp --dport 54327 --jump ACCEPT;
+        for port in 54321 54322 54323 54324 54327; do
+          iptables --check nixos-fw --protocol tcp --dport $port --source $ALLOWED_IP --jump ACCEPT && \
+          iptables --delete nixos-fw --protocol tcp --dport $port --source $ALLOWED_IP --jump ACCEPT;
+        done
       '';
     };
     hostName = "nixos";
