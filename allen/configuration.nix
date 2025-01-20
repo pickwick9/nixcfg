@@ -98,7 +98,7 @@
       enable = true;
       # allow inbound TCP connections from ALLOWED_IP on expo and supabase ports
       extraCommands = ''
-        ALLOWED_IP=192.168.1.161/24
+        ALLOWED_IP=192.168.1.161
 
         # expo
         iptables --check nixos-fw --protocol tcp --dport 8081 --source $ALLOWED_IP --jump ACCEPT || \
@@ -111,7 +111,7 @@
         done
       '';
       extraStopCommands = ''
-        ALLOWED_IP=192.168.1.161/24
+        ALLOWED_IP=192.168.1.161
 
         # expo
         iptables --check nixos-fw --protocol tcp --dport 8081 --source $ALLOWED_IP --jump ACCEPT && \
