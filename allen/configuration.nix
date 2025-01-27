@@ -52,6 +52,7 @@
       ngspice
       nmap
       obs-studio
+      ollama
       popsicle
       python3
       qbittorrent
