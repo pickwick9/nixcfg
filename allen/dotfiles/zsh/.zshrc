@@ -15,4 +15,12 @@ fcd() {
 zle -N fcd
 bindkey '^T' fcd
 
+fvi() {
+  local file
+  file=$(find . -type f 2> /dev/null | fzf) && vi "$file"
+  zle reset-prompt
+}
+zle -N fvi
+bindkey '^V' fvi
+
 eval "$(direnv hook zsh)"
